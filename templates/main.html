@@ -1,0 +1,105 @@
+{% extends "base.html"%}
+{%block title%}Index{%endblock%}
+{%block head%}
+{{super()}}
+{%endblock%}
+{%block content%}
+<div>
+    <ul class="list-group list-group-flush">
+        {%for message in data%}
+        <li class="list-group-item">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                  <h5 class="card-title">{{message.title}}</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">发帖人：{{message.poster}}</h6>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+            </div>
+        {%endfor%}
+        </li>
+    </ul>
+    
+
+</div>
+<div>
+    
+    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-whatever="@mdo"
+    data-bs-target="#modal1" ">发布新的帖子</button>
+
+    <div class=" modal fade" id="modal1" tabindex="-1" aria-labelledby="modal1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">发布新的帖子</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" id="submit-form">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="recipient-name" id = "title" class="col-form-label">帖子title</label>
+                        <input type="text" class="form-control" id="recipient-name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="message-text"id = "content"  class="col-form-label">帖子内容</label>
+                        <textarea class="form-control" id="message-text"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">发布帖子</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    
+    {% block scripts %}
+    {{bootstrap.load_js()}}
+    <script>
+        var modal1 = document.getElementById('modal1')
+        var form = document.getElementById('submit-form')
+        form.addEventListener('submit',postSubmit)
+        function postSubmit(event){
+            var title = form.querySelector('#recipient-name').value
+            var content = form.querySelector('#message-text').value 
+            event.preventDefault()
+            var data =  {
+                    'title':title,
+                    'content':content
+            }
+            $.ajax({
+                type: 'POST',
+                url: '/post',
+                contentType : 'application/json',
+                data: JSON.stringify(data),
+                dataType: 'json',
+                success: function (data) {
+                    alert("success")
+                },
+                error: function (xhr, type) {
+                }
+            });
+
+
+
+        }
+    
+
+
+    </script>
+
+    {% endblock %}
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+{%endblock%}
